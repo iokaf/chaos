@@ -165,7 +165,7 @@ class SimulationResult:
         # via the . method with the corresponding variable name.
         # Should be self.{variable_name} = self.y[i]
         for i, name in enumerate(self.variable_names):
-            setattr(self, name, self.y[i])
+            setattr(self, name, self.complete_output[i])
 
     def as_array(self) -> np.ndarray:
         return self.complete_output
