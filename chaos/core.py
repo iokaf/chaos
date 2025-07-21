@@ -152,14 +152,27 @@ class DynamicalSystem:
 @dataclass
 class SimulationResult:
     t: np.ndarray
-    y: np.ndarray
+    complete_ouput: np.ndarray
     variable_names: Tuple[str, ...]
 
-    def as_array(self) -> np.ndarray:
-        return self.y
+    def __post_init__(self):
+        if len(self.variable_names) != self.y.shape[0]:
+            raise ValueError("Number of variable names must match number of state variables.")
+        if len(self.t) != self.y.shape[1]:
+            raise ValueError("Time vector length must match number of time steps in state variables.")  
+        
+        # Make a slot for each variable name that holds only the relevant data. This should be accessible
+        # via the . method with the corresponding variable name.
+        # Should be self.{variable_name} = self.y[i]
+        for i, name in enumerate(self.variable_names):
+            setattr(self, name, self.y[i])
 
+    def as_array(self) -> np.ndarray:
+        return self.complete_output
+    
     def as_dict(self) -> Dict[str, np.ndarray]:
-        return {name: self.y[i] for i, name in enumerate(self.variable_names)}
+        return {name: getattr(self, name) for name in self.variable_names}
+
 
     def plot(self):
         import matplotlib.pyplot as plt
