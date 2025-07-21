@@ -74,6 +74,44 @@ class NamedValues:
     def __eq__(self, other):
         return isinstance(other, NamedValues) and self._keys == other._keys and self._values == other._values
 
+    def set_value(self, key: str, value: float):
+        """Return a new NamedValues with the specified key updated.
+        Args:
+            key (str): The key to update.
+            value (float): The new value for the key.
+
+        Returns:
+            NamedValues: A new NamedValues instance with the updated value.
+
+        Raises KeyError if the key does not exist.
+        """
+        
+        if key not in self._key_to_index:
+            raise KeyError(f"Key '{key}' not found in NamedValues")
+        index = self._key_to_index[key]
+        new_values = list(self._values)
+        new_values[index] = value
+        return NamedValues(names=self._keys, values=new_values)
+
+    def set_values(self, values_dict: Dict[str, float]):
+        """Return a new NamedValues with the specified keys updated.
+
+        Args:
+            values_dict (Dict[str, float]): A dictionary of key-value pairs to update.
+        Returns:
+            NamedValues: A new NamedValues instance with the updated values.
+
+        Raises KeyError if any key in values_dict does not exist.
+        """
+        new_values = list(self._values)
+        for key, value in values_dict.items():
+            if key in self._key_to_index:
+                index = self._key_to_index[key]
+                new_values[index] = value
+            else:
+                raise KeyError(f"Key '{key}' not found in NamedValues")
+        return NamedValues(names=self._keys, values=new_values)
+    
 
 class SolverMethod(Enum):
     RK45 = "RK45"

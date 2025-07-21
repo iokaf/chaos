@@ -44,6 +44,25 @@ def test_named_values_hashable():
     assert hash(nv1) == hash(nv2)
     assert nv1 == nv2
 
+def test_set_value():
+    nv = NamedValues(values_dict={"x": 1.0, "y": 2.0})
+    new_nv = nv.set_value("x", 3.0)
+    assert new_nv["x"] == 3.0
+    assert nv["x"] == 1.0  # Original should remain unchanged
+
+    with pytest.raises(KeyError):
+        nv.set_value("z", 5.0)  # Key 'z' does not exist
+        
+def test_set_values():
+    nv = NamedValues(values_dict={"x": 1.0, "y": 2.0})
+    new_nv = nv.set_values({"x": 3.0, "y": 4.0})
+    assert new_nv["x"] == 3.0
+    assert new_nv["y"] == 4.0
+    assert nv["x"] == 1.0  # Original should remain unchanged
+
+    with pytest.raises(KeyError):
+        nv.set_values({"x": 5.0, "z": 6.0})  # Key 'z' does not exist
+
 # --- SolverConfig Tests ---
 
 def test_solver_config_defaults():
