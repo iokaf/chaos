@@ -136,7 +136,7 @@ class SolverConfig:
     def time_eval(self) -> np.ndarray:
         return np.arange(
             self.t_span[0],
-            self.t_span[1] + self.time_step,
+            self.t_span[1] + self.time_step / 10, # to include the end point
             self.time_step
         )
 
