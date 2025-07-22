@@ -27,9 +27,15 @@ def main():
 
     # Plot results
     fig, ax = plt.subplots()
-    ax.plot(result.t, result.y[0], label='x')
-    ax.plot(result.t, result.y[1], label='y')
-    ax.plot(result.t, result.y[2], label='z')
+
+    variable_names = result.variable_names
+
+    for name in variable_names:
+        if hasattr(result, name):
+            ax.plot(result.t, getattr(result, name), label=name)
+        else:
+            print(f"Warning: {name} not found in result.")
+
     ax.set_title(f"{system_enum.value.capitalize()} system simulation")
     ax.set_xlabel("Time")
     ax.set_ylabel("State variables")

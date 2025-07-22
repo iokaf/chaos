@@ -110,7 +110,7 @@ def test_solver_lorenz_equivalent():
     result = solver.solve(system, initial_conditions=initials, config=config)
 
     assert isinstance(result, SimulationResult)
-    assert result.y.shape[0] == 3
+    assert result.complete_output.shape[0] == 3
     assert result.t[0] >= 0
     assert "x" in result.variable_names
 
@@ -131,5 +131,5 @@ def test_solver_transient_cut():
     assert len(result.t) == expected_length
 
     # The dummy ODE returns zero derivatives, so state does not change:
-    assert all((result.y[:, 0] == result.y[:, -1]))
+    assert all((result.complete_output[:, 0] == result.complete_output[:, -1]))
 

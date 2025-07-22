@@ -152,18 +152,19 @@ class DynamicalSystem:
 @dataclass
 class SimulationResult:
     t: np.ndarray
-    complete_ouput: np.ndarray
+    complete_output: np.ndarray
     variable_names: Tuple[str, ...]
 
     def __post_init__(self):
-        if len(self.variable_names) != self.y.shape[0]:
+        print("I am called")
+        if len(self.variable_names) != self.complete_output.shape[0]:
             raise ValueError("Number of variable names must match number of state variables.")
-        if len(self.t) != self.y.shape[1]:
-            raise ValueError("Time vector length must match number of time steps in state variables.")  
-        
+        if len(self.t) != self.complete_output.shape[1]:
+            raise ValueError("Time vector length must match number of time steps in state variables.")
+
         # Make a slot for each variable name that holds only the relevant data. This should be accessible
         # via the . method with the corresponding variable name.
-        # Should be self.{variable_name} = self.y[i]
+        # Should be self.{variable_name} = self.complete_output[i]
         for i, name in enumerate(self.variable_names):
             setattr(self, name, self.complete_output[i])
 
@@ -178,7 +179,7 @@ class SimulationResult:
         import matplotlib.pyplot as plt
 
         for i, name in enumerate(self.variable_names):
-            plt.plot(self.t, self.y[i], label=name)
+            plt.plot(self.t, getattr(self, name), label=name)
         plt.xlabel("Time")
         plt.legend()
         plt.title("Dynamical System Simulation")
@@ -224,6 +225,6 @@ class Solver:
 
         return SimulationResult(
             t=t_data,
-            y=y_data,
+            complete_output=y_data,
             variable_names=tuple(initial_conditions.keys())
         )
