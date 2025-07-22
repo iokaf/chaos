@@ -156,7 +156,6 @@ class SimulationResult:
     variable_names: Tuple[str, ...]
 
     def __post_init__(self):
-        print("I am called")
         if len(self.variable_names) != self.complete_output.shape[0]:
             raise ValueError("Number of variable names must match number of state variables.")
         if len(self.t) != self.complete_output.shape[1]:
